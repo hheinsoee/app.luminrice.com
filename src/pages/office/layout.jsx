@@ -15,10 +15,11 @@ import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 import { APP_ROUTES } from '../../utils/constants';
-import { Lock } from '@mui/icons-material';
-import Dashboard from './pages/dashboard';
+import { Group, Lock } from '@mui/icons-material';
+import Customers from './customers';
+import { Alert, Modal, Snackbar } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -33,7 +34,21 @@ interface Props {
 export default function OfficeLayout(props: Props) {
     const { window } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
+    const [alert, setAlert] = React.useState(false);
+    const [modal, setModal] = React.useState(false);
 
+
+    const alertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setAlert(false);
+    }
+    React.useEffect(() => {
+        if (alert == false) {
+            alertClose();
+        }
+    }, [alert])
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
@@ -42,6 +57,7 @@ export default function OfficeLayout(props: Props) {
         localStorage.removeItem('token');
         navigate(APP_ROUTES.SIGN_IN);
     }
+
     const drawer = (
         <div>
             <List>
@@ -54,26 +70,19 @@ export default function OfficeLayout(props: Props) {
             </List>
             <Divider />
             <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
+                {[
+                    { label: 'customers', icon: <Group />, to: '/customers' },
+                    { label: 'Starred', icon: <InboxIcon />, to: '/' },
+                    { label: 'Send email', icon: <InboxIcon />, to: '/' },
+                    { label: 'Drafts', icon: <InboxIcon />, to: '/' }
+                ].map((r, index) => (
+                    <ListItem key={r.label} disablePadding>
+                        <ListItemButton component={Link} to={r.to}>
                             <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                                {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
+                                {r.icon}
                             </ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-            <Divider />
-            <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
+                            <ListItemText primary={r.label} />
                         </ListItemButton>
                     </ListItem>
                 ))}
@@ -162,9 +171,30 @@ export default function OfficeLayout(props: Props) {
             >
                 <Toolbar />
                 <Routes>
-                    <Route path={`/`} element={<Dashboard />} />
-                    <Route path={`/setting`} element={<div>hello</div>} />
+                    <Route path={`/`} element={<div>hello</div>} />
+                    <Route path={`/customers`} element={<Customers alert={alert} setAlert={setAlert} modal={modal} setModal={setModal} />} />
                 </Routes>
+                <Snackbar open={alert !== false} autoHideDuration={6000} onClose={alertClose}>
+                    <Alert onClose={alertClose} severity={alert.status ? alert.status : 'success'} sx={{ width: '100%' }}>
+                        {alert.message}
+                    </Alert>
+                </Snackbar>
+                <Modal
+                    open={modal !== false}
+                    // onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        color: '#ffffff'
+                    }}>
+                        {modal}
+                    </Box>
+                </Modal>
             </Box>
         </Box>
     );
