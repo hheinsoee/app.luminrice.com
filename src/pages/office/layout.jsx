@@ -11,15 +11,19 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 import { APP_ROUTES } from '../../utils/constants';
-import { Group, Lock } from '@mui/icons-material';
+import { AttachMoney, Category, Dashboard, Event, Group, Lock, Money, Sell } from '@mui/icons-material';
 import Customers from './customers';
 import { Alert, Modal, Snackbar } from '@mui/material';
+import Items from './items';
+import Purchase from './purchase';
+import AppDashboard from './dashboard';
+import { useGenInfo } from './../../hooks/genInfo';
+import Sales from './sales';
 
 const drawerWidth = 240;
 
@@ -36,8 +40,7 @@ export default function OfficeLayout(props: Props) {
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [alert, setAlert] = React.useState(false);
     const [modal, setModal] = React.useState(false);
-
-
+    const [routeName, setRouteName] = React.useState(null);
     const alertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
             return;
@@ -59,7 +62,7 @@ export default function OfficeLayout(props: Props) {
     }
 
     const drawer = (
-        <div>
+        <Box>
             <List>
                 <ListItem>
                     <div>
@@ -71,10 +74,7 @@ export default function OfficeLayout(props: Props) {
             <Divider />
             <List>
                 {[
-                    { label: 'customers', icon: <Group />, to: '/customers' },
-                    { label: 'Starred', icon: <InboxIcon />, to: '/' },
-                    { label: 'Send email', icon: <InboxIcon />, to: '/' },
-                    { label: 'Drafts', icon: <InboxIcon />, to: '/' }
+                    { label: 'လုံးခြုံကြည့်ရန်', icon: <Dashboard />, to: '/' }
                 ].map((r, index) => (
                     <ListItem key={r.label} disablePadding>
                         <ListItemButton component={Link} to={r.to}>
@@ -90,6 +90,43 @@ export default function OfficeLayout(props: Props) {
 
             <Divider />
             <List>
+                {[
+                    { label: 'ဘောက်ချာ', icon: <Sell />, to: '/sales' },
+                    { label: 'ငွေရ မှတ်တမ်း', icon: <AttachMoney />, to: '/' },
+                    { label: 'အဝယ် မှတ်တမ်း', icon: <Event />, to: '/purchase' }
+                ].map((r, index) => (
+                    <ListItem key={r.label} disablePadding>
+                        <ListItemButton component={Link} to={r.to}>
+                            <ListItemIcon>
+                                {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
+                                {r.icon}
+                            </ListItemIcon>
+                            <ListItemText primary={r.label} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+
+            <Divider />
+            <List>
+                {[
+                    { label: 'ဆန် အမျိုးအမည်', icon: <Category />, to: '/items' },
+                    { label: 'customers', icon: <Group />, to: '/customers' },
+                ].map((r, index) => (
+                    <ListItem key={r.label} disablePadding>
+                        <ListItemButton component={Link} to={r.to}>
+                            <ListItemIcon>
+                                {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
+                                {r.icon}
+                            </ListItemIcon>
+                            <ListItemText primary={r.label} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+            <Divider />
+
+            <List>
                 <ListItem disablePadding>
                     <ListItemButton onClick={signOut}>
                         <ListItemIcon>
@@ -99,7 +136,7 @@ export default function OfficeLayout(props: Props) {
                     </ListItemButton>
                 </ListItem>
             </List>
-        </div>
+        </Box>
     );
 
     const container = window !== undefined ? () => window().document.body : undefined;
@@ -125,7 +162,7 @@ export default function OfficeLayout(props: Props) {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
-                        Responsive drawer
+                        {routeName}
                     </Typography>
                     <div>
                         <Typography variant='h6'>{props.user.name}</Typography>
@@ -166,14 +203,21 @@ export default function OfficeLayout(props: Props) {
                 </Drawer>
             </Box>
             <Box
-                component="main"
-                sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+                // component="main"
+                sx={{ flexGrow: 1, p: 0, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
             >
                 <Toolbar />
-                <Routes>
-                    <Route path={`/`} element={<div>hello</div>} />
-                    <Route path={`/customers`} element={<Customers alert={alert} setAlert={setAlert} modal={modal} setModal={setModal} />} />
-                </Routes>
+                {
+
+                    <Routes>
+                        <Route path={`/`} element={<AppDashboard alert={alert} setAlert={setAlert} modal={modal} setModal={setModal} setRouteName={setRouteName} {...props} />} />
+                        <Route path={`/items`} element={<Items alert={alert} setAlert={setAlert} modal={modal} setModal={setModal} setRouteName={setRouteName} {...props} />} />
+                        <Route path={`/customers`} element={<Customers alert={alert} setAlert={setAlert} modal={modal} setModal={setModal} setRouteName={setRouteName} {...props} />} />
+                        <Route path={`/purchase`} element={<Purchase alert={alert} setAlert={setAlert} modal={modal} setModal={setModal} setRouteName={setRouteName} {...props} />} />
+                        <Route path={`/sales`} element={<Sales alert={alert} setAlert={setAlert} modal={modal} setModal={setModal} setRouteName={setRouteName} {...props} />} />
+
+                    </Routes>
+                }
                 <Snackbar open={alert !== false} autoHideDuration={6000} onClose={alertClose}>
                     <Alert onClose={alertClose} severity={alert.status ? alert.status : 'success'} sx={{ width: '100%' }}>
                         {alert.message}

@@ -1,3 +1,7 @@
+import { Card, CardActionArea, CardContent, Typography } from '@mui/material';
+
+import { Link } from 'react-router-dom';
+
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
@@ -9,7 +13,7 @@ import { Alert, Box, TextField } from '@mui/material';
 import axios from 'axios';
 import { API_URL } from '../../../utils/constants';
 import { getTokenFromLocalStorage } from './../../../auth/auth'
-export function CustomerAdd(props) {
+export function ItemAdd(props) {
     const [open, setOpen] = React.useState(false);
     const handleClose = () => {
         setOpen(false);
@@ -22,7 +26,7 @@ export function CustomerAdd(props) {
         const token = getTokenFromLocalStorage();
         var option = {
             method: 'post',
-            url: `${API_URL}/customer`,
+            url: `${API_URL}/item`,
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -30,8 +34,8 @@ export function CustomerAdd(props) {
             },
             data: {
                 'name': data.get('name'),
-                'phone': data.get('phone'),
-                'address': data.get('address'),
+                'color': data.get('color'),
+                'description': data.get('description')
             },
             validateStatus: false //to get error status
         };
@@ -39,12 +43,10 @@ export function CustomerAdd(props) {
 
         props.setAlert(false)
         if (
-            option.data.name == '' ||
-            option.data.phone == '' ||
-            option.data.address == ''
+            option.data.name == ''
         ) {
             props.setAlert({
-                message: "အချက်အလက်ပြည့်စုံစွာထည့်ပါ",
+                message: "ဆန်အမည်ရေးပါ",
                 status: 'warning'
             })
             return;
@@ -53,9 +55,9 @@ export function CustomerAdd(props) {
         await axios.request(option).then(function (response) {
             if (response.status == 200) {
                 props.setAlert({
-                    message: `customer "${response.data.name}" ကိုမှတ်ပြီး`
+                    message: `ဆန် "${response.data.name}" ကိုမှတ်ပြီး`
                 })
-                props.setFreshCustomer(response.data);
+                props.setFreshData(response.data);
                 handleClose()
             } else {
                 props.setAlert({
@@ -84,7 +86,7 @@ export function CustomerAdd(props) {
                 aria-labelledby="scroll-dialog-title"
                 aria-describedby="scroll-dialog-description"
             >
-                <DialogTitle id="scroll-dialog-title">Customer သစ်အချက်အလက်</DialogTitle>
+                <DialogTitle id="scroll-dialog-title">ဆန် အမျိုးအမည်သစ်</DialogTitle>
                 <DialogContent >
 
                     <DialogContentText
@@ -100,20 +102,22 @@ export function CustomerAdd(props) {
                             type="text"
                             variant="standard"
                             required
-                        /><TextField fullWidth
-                            id="phone"
-                            name="phone"
-                            label="Phone Number"
-                            type="text"
+                        />
+                        <TextField fullWidth autoFocus
+                            id="color"
+                            name="color"
+                            label="color"
+                            type="color"
                             variant="standard"
                             required
-                        /><TextField fullWidth
-                            id="address"
-                            name="address"
-                            label="Address"
+                        />
+                        <TextField fullWidth
+                            id="description"
+                            name="description"
+                            label="description"
                             type="text"
                             variant="standard"
-                            required
+                            // required
                         />
 
                         <Button
@@ -127,3 +131,44 @@ export function CustomerAdd(props) {
         </div >
     );
 }
+
+
+
+const sample = [
+    { kg: 48, qty: 2089 },
+    { kg: 24, qty: 2489 },
+    { kg: 12, qty: 34522 },
+    { kg: 6, qty: 209 }
+]
+function ItemsCard(props) {
+    var total = 0;
+    return (
+        <Card>
+            <CardActionArea component={Link} to={`/items/id`}>
+                <CardContent>
+                    <Typography variant='big' className='big'>
+                        ဆန် အမည်
+                    </Typography>
+                    <table className='smallDashboard' cellspacing="0">
+                        {
+                            sample.map((r, i) => {
+                                total = total + (r.kg * r.qty);
+                                return (
+                                    <tr className='_count' key={i}>
+                                        <td className='_size'>{r.kg} kg</td>
+                                        <td className='_amount rtl'>{r.qty.toLocaleString()} pac</td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </table>
+                    <Typography variant='h6'>
+                        <center>{total.toLocaleString()} kg</center>
+                    </Typography>
+                </CardContent>
+            </CardActionArea>
+        </Card>
+    );
+}
+
+export default ItemsCard;

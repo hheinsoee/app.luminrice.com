@@ -5,7 +5,7 @@ export default function TheState(props) {
     var title = props.title;
     var message = props.message;
     return (
-        <div>
+        <div style={{height:'100vh',display:'flex',justifyContent:'center',alignItems:'center'}}>
             {title}
         </div>
     );

@@ -1,6 +1,6 @@
 import React from 'react';
 import logo from './logo.svg';
-import './assets/App.css';
+import './assets/index.css';
 import SignInSide from './pages/signin';
 import { APP_ROUTES } from './utils/constants';
 import Office from './pages/office';

@@ -5,6 +5,7 @@ import { Button } from '@mui/material';
 import { APP_ROUTES } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import OfficeLayout from './layout';
+import { useGenInfo } from './../../hooks/genInfo';
 
 // function OfficeLayout(user) {
 
@@ -27,10 +28,11 @@ import OfficeLayout from './layout';
 // }
 export default function Office() {
     const { user, authenticated } = useUser();
-    if (!user || !authenticated) {
-        return <TheState state="loading" title="Loading" />;
+    const [genLoad, genErr, genInfo] = useGenInfo();
+    if (!user || !authenticated || genLoad) {
+        return <TheState state="loading" title="Checking Auth" />;
     }
     return (
-        <OfficeLayout user={user} />
+        <OfficeLayout user={user} genInfo={genInfo} />
     );
 }

@@ -75,6 +75,7 @@ export default function SignInSide() {
         }
         catch (err) {
             console.log('Some error occured during signing in: ', err);
+            setMessage(err.message)
         }
         finally {
             setIsLoading(false);
@@ -91,7 +92,7 @@ export default function SignInSide() {
                     sm={4}
                     md={7}
                     sx={{
-                        backgroundImage: 'url(https://luminrice.com/assets/images/rice_farming.webp)',
+                        backgroundImage: 'url(/assets/img/lumin.jpg)',
                         backgroundRepeat: 'no-repeat',
                         backgroundColor: (t) =>
                             t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -136,7 +137,7 @@ export default function SignInSide() {
                                 id="password"
                                 autoComplete="current-password"
                             />
-                            {message && <Typography>{message}</Typography>}
+                            {message && <Typography fullWidth variant={TextField}>{message}</Typography>}
                             <Button
                                 type="submit"
                                 fullWidth
