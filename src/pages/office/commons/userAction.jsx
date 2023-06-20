@@ -7,7 +7,7 @@ import { getTokenFromLocalStorage } from '../../../auth/auth';
 import { API_URL } from '../../../utils/constants';
 import { remove } from '../../../helpers/function';
 
-function UserAction({ params, editRow, setEditRow, apiPath }) {
+function UserAction({ params, editRow, setEditRow, postUrl }) {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     // const [, set] = useState(false);
@@ -21,7 +21,7 @@ function UserAction({ params, editRow, setEditRow, apiPath }) {
         const token = getTokenFromLocalStorage();
         var option = {
             method: 'PUT',
-            url: `${API_URL}/${apiPath}/${params.row.id}`,
+            url: `${postUrl}/${params.row.id}`,
             data: params.row,
             headers: {
                 Accept: 'application/json',

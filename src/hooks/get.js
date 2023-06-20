@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { getTokenFromLocalStorage } from './../auth/auth';
+import { getTokenFromLocalStorage } from '../auth/auth';
 import axios from 'axios';
-import { API_URL } from './../utils/constants';
 
-export function useGenInfo(props) {
-    const [genLoad, setGenLoad] = useState(false)
-    const [genErr, setGenErr] = useState(false)
-    const [genInfo, setGenInfo] = useState({});
+export function useGet(props) {
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(false)
+    const [data, setData] = useState({});
 
     const token = getTokenFromLocalStorage();
     useEffect(() => {
         async function fetchData(){
             var option = {
                 method: 'get',
-                url: `${API_URL}/genInfo`,
+                url: `${props.url}`,
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -22,20 +21,20 @@ export function useGenInfo(props) {
                 validateStatus: false //to get error status
             };
 
-            setGenLoad(true);
+            setLoading(true);
             await axios.request(option)
                 .then(function (response) {
-                    setGenInfo(response.data)
+                    setData(response.data)
                 })
                 .catch(function (error) {
                     console.log(error)
-                    setGenErr(error)
+                    setError(error)
                 })
                 .finally(() => {
-                    setGenLoad(false)
+                    setLoading(false)
                 });
         }
         fetchData();
-    }, []);
-    return [genLoad, genErr, genInfo ];
+    }, [props.url]);
+    return [loading, error, data ];
 }

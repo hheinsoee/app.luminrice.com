@@ -9,7 +9,6 @@ import axios from 'axios';
 import UserAction from '../commons/userAction';
 import DateTime from '../../../components';
 import moment from 'moment';
-import { useGenInfo } from '../../../hooks/genInfo';
 
 
 export default function Purchase(props) {

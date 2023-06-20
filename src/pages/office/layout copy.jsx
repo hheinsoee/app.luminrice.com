@@ -14,14 +14,15 @@ import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Link, NavLink, Route, Routes, useNavigate, useParams } from 'react-router-dom';
-import { API_URL, APP_ROUTES } from '../../utils/constants';
-import { AttachMoney, Business, Category, DarkMode, Dashboard, Event, Group, GroupOutlined, LightMode, Lock, Money, MoneyRounded, Sell } from '@mui/icons-material';
+import { Link, Route, Routes, useNavigate } from 'react-router-dom';
+import { APP_ROUTES } from '../../utils/constants';
+import { AttachMoney, Category, Dashboard, Event, Group, Lock, Money, Sell } from '@mui/icons-material';
+import Customers from './customers';
 import { Alert, Modal, Snackbar } from '@mui/material';
+import Items from './items';
+import Purchase from './purchase';
 import AppDashboard from './dashboard';
-import MasterTable from './master';
-import { pages } from './pageSetting';
-import setting from './../../setting.json';
+import Sales from './sales';
 
 const drawerWidth = 240;
 
@@ -33,7 +34,7 @@ interface Props {
     window?: () => Window;
 }
 
-export default function OfficeLayout(props) {
+export default function OfficeLayout(props: Props) {
     const { window } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [alert, setAlert] = React.useState(false);
@@ -58,25 +59,26 @@ export default function OfficeLayout(props) {
         localStorage.removeItem('token');
         navigate(APP_ROUTES.SIGN_IN);
     }
-    var { path } = useParams();
+
     const drawer = (
         <Box>
             <List>
                 <ListItem>
                     <div>
-                        <Typography variant='h5'>{setting.app_name}</Typography>
-                        <Typography variant='caption'>version {setting.version}</Typography>
+                        <Typography variant='h5'>{props.user.name}</Typography>
+                        <div>{props.user.role_name}</div>
                     </div>
                 </ListItem>
             </List>
             <Divider />
             <List>
                 {[
-                    { label: 'Dashboard', icon: <Dashboard />, to: '/' }
+                    { label: 'လုံးခြုံကြည့်ရန်', icon: <Dashboard />, to: '/' }
                 ].map((r, index) => (
                     <ListItem key={r.label} disablePadding>
-                        <ListItemButton component={NavLink} to={r.to} style={({ isActive, isPending }) => isActive ? { backgroundColor: 'rgba(100%,100%,100%,10%)' } : {}}>
+                        <ListItemButton component={Link} to={r.to}>
                             <ListItemIcon>
+                                {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
                                 {r.icon}
                             </ListItemIcon>
                             <ListItemText primary={r.label} />
@@ -87,10 +89,33 @@ export default function OfficeLayout(props) {
 
             <Divider />
             <List>
-                {pages(props).map((r, index) => (
-                    <ListItem key={r.label} disablePadding >
-                        <ListItemButton component={NavLink} to={r.to} style={({ isActive, isPending }) => isActive ? { backgroundColor: 'rgba(100%,100%,100%,10%)' } : {}}>
+                {[
+                    { label: 'ဘောက်ချာ', icon: <Sell />, to: '/sales' },
+                    { label: 'ငွေရ မှတ်တမ်း', icon: <AttachMoney />, to: '/' },
+                    { label: 'အဝယ် မှတ်တမ်း', icon: <Event />, to: '/purchase' }
+                ].map((r, index) => (
+                    <ListItem key={r.label} disablePadding>
+                        <ListItemButton component={Link} to={r.to}>
                             <ListItemIcon>
+                                {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
+                                {r.icon}
+                            </ListItemIcon>
+                            <ListItemText primary={r.label} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+
+            <Divider />
+            <List>
+                {[
+                    { label: 'ဆန် အမျိုးအမည်', icon: <Category />, to: '/items' },
+                    { label: 'customers', icon: <Group />, to: '/customers' },
+                ].map((r, index) => (
+                    <ListItem key={r.label} disablePadding>
+                        <ListItemButton component={Link} to={r.to}>
+                            <ListItemIcon>
+                                {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
                                 {r.icon}
                             </ListItemIcon>
                             <ListItemText primary={r.label} />
@@ -109,16 +134,8 @@ export default function OfficeLayout(props) {
                         <ListItemText primary="Sign out" />
                     </ListItemButton>
                 </ListItem>
-                <ListItem disablePadding>
-                    <ListItemButton onClick={() => props.setThemeMode(props.themeMode == 'dark' ? "light" : "dark")}>
-                        <ListItemIcon>
-                            {props.themeMode == 'dark' ? <LightMode /> : <DarkMode />}
-                        </ListItemIcon>
-                        <ListItemText primary={props.themeMode == 'dark' ? "switch Light Mode" : "switch Dark Mode"} />
-                    </ListItemButton>
-                </ListItem>
             </List>
-        </Box >
+        </Box>
     );
 
     const container = window !== undefined ? () => window().document.body : undefined;
@@ -148,6 +165,7 @@ export default function OfficeLayout(props) {
                     </Typography>
                     <div>
                         <Typography variant='h6'>{props.user.name}</Typography>
+                        <Typography variant='caption'>{props.user.role_name}</Typography>
                     </div>
                 </Toolbar>
             </AppBar>
@@ -192,13 +210,10 @@ export default function OfficeLayout(props) {
 
                     <Routes>
                         <Route path={`/`} element={<AppDashboard alert={alert} setAlert={setAlert} modal={modal} setModal={setModal} setRouteName={setRouteName} {...props} />} />
-                        {
-                            pages(props).map((d, i) => {
-                                return <Route key={i} path={d.to} element={<MasterTable alert={alert} setAlert={setAlert} modal={modal} setModal={setModal} setRouteName={setRouteName} {...props}
-                                    {...d}
-                                />} />
-                            })
-                        }
+                        <Route path={`/items`} element={<Items alert={alert} setAlert={setAlert} modal={modal} setModal={setModal} setRouteName={setRouteName} {...props} />} />
+                        <Route path={`/customers`} element={<Customers alert={alert} setAlert={setAlert} modal={modal} setModal={setModal} setRouteName={setRouteName} {...props} />} />
+                        <Route path={`/purchase`} element={<Purchase alert={alert} setAlert={setAlert} modal={modal} setModal={setModal} setRouteName={setRouteName} {...props} />} />
+                        <Route path={`/sales`} element={<Sales alert={alert} setAlert={setAlert} modal={modal} setModal={setModal} setRouteName={setRouteName} {...props} />} />
 
                     </Routes>
                 }

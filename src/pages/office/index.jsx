@@ -2,10 +2,10 @@ import * as React from 'react';
 import { useUser } from '../../auth/user';
 import TheState from '../../components/state';
 import { Button } from '@mui/material';
-import { APP_ROUTES } from '../../utils/constants';
+import { API_URL, APP_ROUTES } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import OfficeLayout from './layout';
-import { useGenInfo } from './../../hooks/genInfo';
+import { useGet } from '../../hooks/get';
 
 // function OfficeLayout(user) {
 
@@ -26,13 +26,16 @@ import { useGenInfo } from './../../hooks/genInfo';
 //         </Grid>
 //     );
 // }
-export default function Office() {
+export default function Office(props) {
     const { user, authenticated } = useUser();
-    const [genLoad, genErr, genInfo] = useGenInfo();
-    if (!user || !authenticated || genLoad) {
+    const [loading, err, genInfo] = useGet({ url: `${API_URL}/genInfo` });
+    
+    
+    if (!user || !authenticated || loading) {
         return <TheState state="loading" title="Checking Auth" />;
+    } else {
+        return (
+            <OfficeLayout user={user} genInfo={genInfo} {...props}/>
+        )
     }
-    return (
-        <OfficeLayout user={user} genInfo={genInfo} />
-    );
 }
