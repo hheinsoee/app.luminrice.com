@@ -1,14 +1,15 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid, GridColDef, GridValueGetterParams, GridCellEditStopParams, MuiEvent, GridCellEditStopReasons } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridValueGetterParams, GridCellEditStopParams, MuiEvent, GridCellEditStopReasons, GridToolbar } from '@mui/x-data-grid';
 import { Button, Chip, MenuItem, Select, TextField } from '@mui/material';
-import { PurchaseAdd, VoucherDetail } from './component';
+import { VoucherAdd, VoucherDetail } from './component';
 import { API_URL } from '../../../utils/constants';
 import { getTokenFromLocalStorage } from '../../../auth/auth';
 import axios from 'axios';
 import UserAction from '../commons/userAction';
 import DateTime from '../../../components';
 import moment from 'moment';
+import { useGenInfo } from '../../../hooks/genInfo';
 import { Info, Person } from '@mui/icons-material';
 
 
@@ -57,7 +58,7 @@ export default function Sales(props) {
         headerName: 'စာရင်းသွင်းသူ',
         width: 150,
         sortable: false,
-        renderCell: (params) => <><Person/>&nbsp;{params.row.user_name}</>
+        renderCell: (params) => params.row.user_name
       },
       {
         field: 'note',
@@ -120,14 +121,17 @@ export default function Sales(props) {
   return (
     <Box sx={{ width: '100%', height: 'calc(100vh - 110px)' }}>
       <VoucherDetail open={openDetail} setOpen={setOpenDetail} {...props} setFreshData={setFreshData} />
-      <PurchaseAdd open={open} setOpen={setOpen} {...props} setFreshData={setFreshData} />
-      <Button onClick={handleClickOpen}>အရောင်း စာရင်းသစ်ထည့်ရန်</Button>
+      <VoucherAdd open={open} setOpen={setOpen} {...props} setFreshData={setFreshData} />
+      <Button onClick={handleClickOpen}>ဘောက်ချာသစ်</Button>
       <DataGrid
         sx={{ borderRadius: 0 }}
         rows={rows}
         // editMode="row"
         columns={columns}
         onCellEditStop={params => setEditRow([...editRow, params.id])}
+        slots={{
+          toolbar: GridToolbar,
+        }}
       />
     </Box>
   );

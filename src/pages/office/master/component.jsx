@@ -9,7 +9,6 @@ import { Alert, Autocomplete, Box, Slider, TextField } from '@mui/material';
 import axios from 'axios';
 import { API_URL } from '../../../utils/constants';
 import { getTokenFromLocalStorage } from '../../../auth/auth'
-import { useGet } from '../../../hooks/get';
 export function AddForm(props) {
     const [open, setOpen] = React.useState(false);
     const [val, setVal] = React.useState({});
@@ -70,7 +69,6 @@ export function AddForm(props) {
             });
         }
     }
-
     React.useEffect(() => {
         setOpen(props.open)
     }, [props.open]);

@@ -4,7 +4,7 @@ import { AttachMoney, Category, Event, Group, Person, Sailing, Sell, } from '@mu
 import DateTime from '../../components';
 import { Chip, MenuItem, Select, TextField } from '@mui/material';
 import moment from 'moment';
-import { useGet } from '../../hooks/get';
+import { VoucherDetail } from './vouchers/component';
 
 export function pages(props) {
   return [
@@ -22,8 +22,7 @@ export function pages(props) {
           width: 100,
           type: 'number',
           form: false,
-          renderCell: (params) => <Chip label={`#${params.row.id.toString().padStart(5, 0)}`}
-          />
+          renderCell: (params) => <VoucherDetail {...params.row} {...props}/>
         },
         {
           field: 'create_time',

@@ -3,12 +3,13 @@ import { getTokenFromLocalStorage } from '../auth/auth';
 import axios from 'axios';
 
 export function useGet(props) {
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
-    const [data, setData] = useState({});
+    const [data, setData] = useState(null);
 
     const token = getTokenFromLocalStorage();
     useEffect(() => {
+        setLoading(true);
         async function fetchData(){
             var option = {
                 method: 'get',
@@ -20,8 +21,6 @@ export function useGet(props) {
                 },
                 validateStatus: false //to get error status
             };
-
-            setLoading(true);
             await axios.request(option)
                 .then(function (response) {
                     setData(response.data)

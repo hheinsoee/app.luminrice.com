@@ -189,7 +189,6 @@ export default function OfficeLayout(props) {
             >
                 <Toolbar />
                 {
-
                     <Routes>
                         <Route path={`/`} element={<AppDashboard alert={alert} setAlert={setAlert} modal={modal} setModal={setModal} setRouteName={setRouteName} {...props} />} />
                         {
