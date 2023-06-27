@@ -10,13 +10,25 @@ import { useGet } from '../../hooks/get';
 export default function Office(props) {
     const { user, authenticated } = useUser();
     const [loading, err, genInfo] = useGet({ url: `${API_URL}/genInfo` });
-    
-    
-    if (!user || !authenticated || loading) {
+
+    const [items, setItems] =React.useState(null);
+    const [customers, setCustomer] =React.useState(null);
+
+    const [loadingCustomer, errCustomer, thecustomers] = useGet({ url: `${API_URL}/customers` });
+    React.useEffect(()=>{
+        setCustomer(thecustomers)
+    },[thecustomers])
+
+    if (!user || !authenticated || loading || loadingCustomer) {
         return <TheState state="loading" title="Checking Auth" />;
     } else {
         return (
-            <OfficeLayout user={user} genInfo={genInfo} {...props}/>
+            <OfficeLayout 
+            user={user} 
+            genInfo={genInfo} 
+            {...props} 
+            customers={customers}
+             />
         )
     }
 }

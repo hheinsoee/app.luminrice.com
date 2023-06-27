@@ -72,7 +72,8 @@ export function AddForm(props) {
     React.useEffect(() => {
         setOpen(props.open)
     }, [props.open]);
-console.log(props)
+    console.log(props)
+    
     return (
         <div>
             <Dialog
@@ -110,6 +111,18 @@ console.log(props)
                                         case 'sizes_id':
                                             return <Autocomplete
                                                 options={props.genInfo.sizes.map((c) => ({ id: c.id, label: `${c.size} ${c.unit}` }))}
+                                                onChange={(e, c) => { c && setVal({ ...val, [p.field]: c.id }); }}
+                                                renderInput={(params) => {
+                                                    return < TextField
+                                                        variant='standard' {...params} label={[p.headerName]}
+                                                    />
+                                                }
+                                                }
+                                            />
+                                            break;
+                                        case 'customers_id':
+                                            return <Autocomplete
+                                                options={props.customers.map((c) => ({ id: c.id, label: `${c.name}` }))}
                                                 onChange={(e, c) => { c && setVal({ ...val, [p.field]: c.id }); }}
                                                 renderInput={(params) => {
                                                     return < TextField

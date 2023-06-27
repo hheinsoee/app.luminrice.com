@@ -3,18 +3,62 @@
   font-weight: normal;
   font-style: normal;
   /* font-display: swap; */
-  src: url("./fonts/PYIDAUNGSU-2.5_REGULAR.TTF") format("truetype")
+  src: url("./fonts/PYIDAUNGSU-2.5_REGULAR.TTF") format("truetype");
 }
 @font-face {
   font-family: "ppp";
   font-weight: bold;
   font-style: bold;
   /* font-display: swap; */
-  src: url("./fonts/PYIDAUNGSU-2.5_BOLD.TTF") format("truetype")
+  src: url("./fonts/PYIDAUNGSU-2.5_BOLD.TTF") format("truetype");
 }
 :root {
   --bg-dust: rgba(50%, 50%, 50%, 10%);
 }
 * {
   font-family: "ppp" !important;
+}
+.right{
+  text-align: right;
+}
+.print.only,
+.print80.only{
+  display: none;
+}
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  table{
+    width: 100%;
+  }
+  thead tr th{
+    border-bottom: 1px solid #000000;
+  }
+  tfoot tr td{
+    border-top: 1px solid #000000;
+  }
+  
+  .print80.only{
+    display: block;
+  }
+  .print,
+  .print *,
+  .print80,
+  .print80 * {
+    visibility: visible;
+    font-size: 9pt;
+  }
+  .print80 {
+    max-width: 80mm;
+  }
+  .no-print,
+  .no-print * {
+    visibility: hidden;
+  }
+  #print80 {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
 }

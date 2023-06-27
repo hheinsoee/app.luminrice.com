@@ -26,6 +26,7 @@ export default function MasterTable(props) {
     } else {
       props.setModal(false);
       setRows(data)
+      setFreshData(null)
     }
   }, [loading, data])
   const handleClickOpen = () => {

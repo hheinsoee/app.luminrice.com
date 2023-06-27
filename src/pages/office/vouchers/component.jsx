@@ -17,8 +17,9 @@ import moment from 'moment';
 import { DataGrid } from '@mui/x-data-grid';
 import DateTime from '../../../components';
 import { nFormat } from '../../../helpers/function';
-import { Add, Close } from '@mui/icons-material';
+import { Add, Close, Print } from '@mui/icons-material';
 import { useGet } from '../../../hooks/get';
+import setting from './../../../setting.json';
 
 
 export function VoucherAdd(props) {
@@ -96,7 +97,6 @@ export function VoucherAdd(props) {
         })
         setTotal(t);
     }, [saleItem])
-    const [loadingCustomer, errCustomer, customers] = useGet({ url: `${API_URL}/customers` });
     return (
         <div>
             <Dialog
@@ -129,29 +129,25 @@ export function VoucherAdd(props) {
                 </AppBar>
                 <DialogContent >
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1 }}>
-                        {
-                            loadingCustomer
-                                ? "loading customer"
-                                : <div style={{ display: 'flex' }} >
-                                    <Autocomplete
-                                        freeSolo
-                                        disablePortal
-                                        id="combo-box-demo"
-                                        options={customers && customers.map((c) => ({ id: c.id, label: c.name }))}
-                                        onChange={(e, customer) => setVoucher({ ...voucher, customers_id: customer ? customer.id : null })}
-                                        // new_customer
-                                        onInputChange={(e, customer_name) => {
-                                            var old_customer = customers.find(c => c.name == customer_name)
-                                            setVoucher({ ...voucher, new_customer: customer_name, customers_id: old_customer ? old_customer.id : null })
-                                        }}
-                                        sx={{ width: 300 }}
-                                        renderInput={(params) => <TextField
-                                            variant='standard' {...params} label="ဖောက်သည် အမည်" helperText={voucher.customers_id && `${customers.find(c => c.id == voucher.customers_id).address} အကြွေး ${nFormat(customers.find(c => c.id == voucher.customers_id).buy_amount - customers.find(c => c.id == voucher.customers_id).pay_amount)}`} />
-                                        }
-                                    />
-                                    {(voucher.new_customer && voucher.new_customer !== '' && !voucher.customers_id) && `(new Customer)`}
-                                </div>
-                        }
+                        <div style={{ display: 'flex' }} >
+                            <Autocomplete
+                                freeSolo
+                                disablePortal
+                                id="combo-box-demo"
+                                options={props.customers && props.customers.map((c) => ({ id: c.id, label: c.name }))}
+                                onChange={(e, customer) => setVoucher({ ...voucher, customers_id: customer ? customer.id : null })}
+                                // new_customer
+                                onInputChange={(e, customer_name) => {
+                                    var old_customer = props.customers.find(c => c.name == customer_name)
+                                    setVoucher({ ...voucher, new_customer: customer_name, customers_id: old_customer ? old_customer.id : null })
+                                }}
+                                sx={{ width: 300 }}
+                                renderInput={(params) => <TextField
+                                    variant='standard' {...params} label="ဖောက်သည် အမည်" helperText={voucher.customers_id && `${props.customers.find(c => c.id == voucher.customers_id).address} အကြွေး ${nFormat(props.customers.find(c => c.id == voucher.customers_id).buy_amount - props.customers.find(c => c.id == voucher.customers_id).pay_amount)}`} />
+                                }
+                            />
+                            {(voucher.new_customer && voucher.new_customer !== '' && !voucher.customers_id) && `(new Customer)`}
+                        </div>
                         <div style={{ textAlign: 'right' }}>
                             <i>#new???</i>
                             <DateTime />
@@ -253,7 +249,7 @@ export function VoucherAdd(props) {
                                     <TableCell align="right" colSpan={5}>ယခင်ပေးရန် ကျန်ငွေ</TableCell>
                                     <TableCell align="right">{nFormat(
                                         voucher.customers_id
-                                            ? customers.find(c => c.id == voucher.customers_id).buy_amount - customers.find(c => c.id == voucher.customers_id).pay_amount
+                                            ? props.customers.find(c => c.id == voucher.customers_id).buy_amount - props.customers.find(c => c.id == voucher.customers_id).pay_amount
                                             : 0
                                     )}
                                     </TableCell>
@@ -269,7 +265,7 @@ export function VoucherAdd(props) {
                                     <TableCell align="right" colSpan={5}>ကျန်ငွေ</TableCell>
                                     <TableCell align="right">
                                         {nFormat((voucher.customers_id
-                                            ? customers.find(c => c.id == voucher.customers_id).buy_amount - customers.find(c => c.id == voucher.customers_id).pay_amount
+                                            ? props.customers.find(c => c.id == voucher.customers_id).buy_amount - props.customers.find(c => c.id == voucher.customers_id).pay_amount
                                             : 0) - voucher.pay_amount + total)}
                                     </TableCell>
                                 </TableRow>
@@ -318,7 +314,7 @@ export function VoucherDetail(props) {
                 if (response.status == 200) {
                     setVoucher(response.data)
                     setOpen(true)
-                    
+
                     console.log(response.data);
                 } else {
                     props.setAlert({
@@ -338,7 +334,9 @@ export function VoucherDetail(props) {
         setOpen(true);
         loadVoucher()
     }
-
+    const print = () => {
+        window.print()
+    }
     return (
         // handleOpen
         <React.Fragment>
@@ -350,70 +348,116 @@ export function VoucherDetail(props) {
                 aria-labelledby="scroll-dialog-title"
                 aria-describedby="scroll-dialog-description"
             >
-                <DialogTitle id="scroll-dialog-title" sx={{ p: 4 }}>Invoice</DialogTitle>
+
+                <DialogTitle id="scroll-dialog-title" sx={{ p: 4 }}>
+                    Invoice
+                    <IconButton className='no-print' onClick={print}><Print /></IconButton>
+                </DialogTitle>
 
                 {
                     voucher &&
+                    <React.Fragment>
+                        <div className='print80 only'>
 
-                    <DialogContent >
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1 }}>
-                            <div>
-                                <Box sx={{ color: 'text.disabled', fontSize: 12 }}>ဖောက်သည် အမည်</Box>
+                            <center>
+                                <h1>{setting.app_name}</h1>
+                                ==================
+                            </center>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px' }}>
                                 {voucher.customer_name}
-                            </div>
-                            <div style={{ textAlign: 'right' }}>
-                                <i>#{props.id}</i>
                                 <DateTime date={voucher.create_time} />
                             </div>
-
-                        </Box>
-
-                        <TableContainer>
-                            <Table sx={{ width: 540 }} aria-label="simple table">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell align="right">စဉ်</TableCell>
-                                        <TableCell >အမျိုးအမည်</TableCell>
-                                        <TableCell align="right">အရွယ်စား</TableCell>
-                                        <TableCell align="right">ဈေးနှုန်း</TableCell>
-                                        <TableCell align="right">အရေတွက်</TableCell>
-                                        <TableCell align="right">သင့်ငွေ</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th className='right'>စဉ်</th>
+                                        <th>အမျိုးအမည်</th>
+                                        <th className='right '>နှုန်း</th>
+                                        <th className='right'>ခုရေ</th>
+                                        <th className='right'>သင့်ငွေ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                     {voucher.sale_items.map((row, i) => (
-                                        <TableRow
-                                            key={i}
-                                        >
-                                            <TableCell align="right">{i + 1}</TableCell>
-                                            <TableCell>{row.item_name}</TableCell>
-                                            <TableCell align="right">{row.size} {row.unit}</TableCell>
-                                            <TableCell align="right">{nFormat(row.sell_price)}</TableCell>
-                                            <TableCell align="right">{nFormat(row.quantity)}</TableCell>
-                                            <TableCell align="right">{nFormat(row.quantity * row.sell_price)}</TableCell>
-                                        </TableRow>
+                                        <tr>
+                                            <td className='right'>{i + 1}</td>
+                                            <td>{row.item_name} - {row.size} {row.unit}</td>
+                                            <td className='right'>{nFormat(row.sell_price)}</td>
+                                            <td className='right'>{nFormat(row.quantity)}</td>
+                                            <td className='right'>{nFormat(row.quantity * row.sell_price)}</td>
+                                        </tr>
                                     ))}
-                                    <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                        <TableCell></TableCell>
-                                        <TableCell></TableCell>
-                                        <TableCell></TableCell>
-                                        <TableCell></TableCell>
-                                        <TableCell align="right">စုစုပေါင်း</TableCell>
-                                        <TableCell align="right">{nFormat(voucher.total_cost || 0)}</TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        <Box sx={{ p: 1 }}>
-                            <Box sx={{ color: 'text.disabled', fontSize: 12 }}>မှတ်ချက်</Box>
-                            {voucher.note}
-                        </Box>
-                        <Box sx={{ textAlign: 'right', p: 1 }}>
-                            <Box sx={{ color: 'text.disabled', fontSize: 12 }}>ဘောက်ချာဖြတ်သူ</Box>
-                            {voucher.user_name}<br />
-                            <small>{voucher.users_id}</small>
-                        </Box>
-                    </DialogContent>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colSpan={4} className='right'>စုစုပေါင်း</td>
+                                        <td className='right'>{nFormat(voucher.total_cost || 0)}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <DialogContent >
+
+
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1 }}>
+                                <div>
+                                    <Box sx={{ color: 'text.disabled', fontSize: 12 }}>ဖောက်သည် အမည်</Box>
+                                    {voucher.customer_name}
+                                </div>
+                                <div style={{ textAlign: 'right' }}>
+                                    <i>#{props.id}</i>
+                                    <DateTime date={voucher.create_time} />
+                                </div>
+
+                            </Box>
+
+                            <TableContainer>
+                                <Table sx={{ width: 540 }} aria-label="simple table">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell align="right">စဉ်</TableCell>
+                                            <TableCell >အမျိုးအမည်</TableCell>
+                                            <TableCell align="right">အရွယ်စား</TableCell>
+                                            <TableCell align="right">ဈေးနှုန်း</TableCell>
+                                            <TableCell align="right">အရေတွက်</TableCell>
+                                            <TableCell align="right">သင့်ငွေ</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {voucher.sale_items.map((row, i) => (
+                                            <TableRow
+                                                key={i}
+                                            >
+                                                <TableCell align="right">{i + 1}</TableCell>
+                                                <TableCell>{row.item_name}</TableCell>
+                                                <TableCell align="right">{row.size} {row.unit}</TableCell>
+                                                <TableCell align="right">{nFormat(row.sell_price)}</TableCell>
+                                                <TableCell align="right">{nFormat(row.quantity)}</TableCell>
+                                                <TableCell align="right">{nFormat(row.quantity * row.sell_price)}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                            <TableCell></TableCell>
+                                            <TableCell></TableCell>
+                                            <TableCell></TableCell>
+                                            <TableCell></TableCell>
+                                            <TableCell align="right">စုစုပေါင်း</TableCell>
+                                            <TableCell align="right">{nFormat(voucher.total_cost || 0)}</TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <Box sx={{ p: 1 }}>
+                                <Box sx={{ color: 'text.disabled', fontSize: 12 }}>မှတ်ချက်</Box>
+                                {voucher.note}
+                            </Box>
+                            <Box sx={{ textAlign: 'right', p: 1 }}>
+                                <Box sx={{ color: 'text.disabled', fontSize: 12 }}>ဘောက်ချာဖြတ်သူ</Box>
+                                {voucher.user_name}<br />
+                                <small>{voucher.users_id}</small>
+                            </Box>
+                        </DialogContent>
+                    </React.Fragment>
                 }
             </Dialog>
         </React.Fragment>

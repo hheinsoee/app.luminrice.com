@@ -91,7 +91,7 @@ export function pages(props) {
           valueGetter: (params) => params.row.vouchers_id ? params.row.vouchers_id : params.row.payment_method,
           renderCell: (params) => params.row.vouchers_id ? <span>{params.row.vouchers_id}</span> : <span>{params.row.payment_method} (bank)</span>,
           table: true, editable: false,
-          form: true, required: true
+          form: false, required: true
         },
         {
           headerName: 'ငွေ',
@@ -106,7 +106,7 @@ export function pages(props) {
           type: 'number',
           table: true, editable: false,
           form: true, required: true,
-          valueGetter: (params) => params.row.customers_name,
+          valueGetter: (params) => params.row.customers_name
         },
         {
           headerName: 'မှတ်ချက်',
