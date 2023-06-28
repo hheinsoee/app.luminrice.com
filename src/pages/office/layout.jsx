@@ -39,7 +39,7 @@ export default function OfficeLayout(props) {
     const [alert, setAlert] = React.useState(false);
     const [modal, setModal] = React.useState(false);
     const [routeName, setRouteName] = React.useState(null);
-    const alertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    const alertClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
