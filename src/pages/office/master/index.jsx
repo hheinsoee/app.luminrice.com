@@ -18,7 +18,7 @@ export default function MasterTable(props) {
   const [freshData, setFreshData] = React.useState(null);
   const [colsSetting, setColsSetting] = React.useState([])
 
-  const [editRow, setEditRow] = React.useState({});
+  const [editRow, setEditRow] = React.useState([]);
   const [loading, err, data] = useGet({ url: `${props.getApi}` });
   React.useEffect(() => {
     if (loading) {
@@ -50,7 +50,7 @@ export default function MasterTable(props) {
 
         x[p.name] = p.table; //col setting hide or sho
         if (p.field == 'sizes_cols_of_items') { //loop and push
-          props.genInfo.sizes.map((s) => {
+          props.sizes.map((s) => {
             return cols.push({
               field: `${s.size}${s.unit}`,
               headerName: `${s.size} ${s.unit}`,
@@ -88,26 +88,35 @@ export default function MasterTable(props) {
   );
 
 
-  //update or add 
+  // update or add 
   React.useEffect(() => {
     if (freshData) {
+      var UpdatedRows = null
       if (rows.length > 0) {
         const index = rows.findIndex((item) => item.id === freshData.id);
         if (index !== -1) {
           // update existing object
           const newData = [...rows];
           newData[index] = freshData;
-          setRows(newData);
+          UpdatedRows = newData;
         } else {
-          // add new object
-          setRows([freshData, ...rows]);
+          UpdatedRows = [freshData, ...rows];
         }
       } else {
-        setRows([freshData, ...rows]);
+        UpdatedRows = [freshData, ...rows];
       }
+      setRows(UpdatedRows);
+      if (props.to == '/customers') {//if customer
+        props.setCustomers(UpdatedRows)
+      }
+      if (props.to == '/items') {//if customer
+        props.setItems(UpdatedRows)
+      }
+      setFreshData(null);
     }
     setEditRow([])
   }, [freshData, props])
+
   return (
     <Box sx={{ width: '100%', height: 'calc(100vh - 110px)' }}>
       {props.to == '/vouchers'
@@ -120,7 +129,7 @@ export default function MasterTable(props) {
 
       <Button onClick={handleClickOpen}>{props.label} သစ်</Button>
       {
-        !loading &&
+        !loading && rows && 
         <DataGrid
           sx={{ borderRadius: 0 }}
           rows={rows}

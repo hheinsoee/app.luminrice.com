@@ -9,26 +9,39 @@ import { useGet } from '../../hooks/get';
 
 export default function Office(props) {
     const { user, authenticated } = useUser();
+
+    const [items, setItems] = React.useState(null);
+    const [customers, setCustomers] = React.useState(null);
+    const [sizes, setSize] = React.useState(null);
+
     const [loading, err, genInfo] = useGet({ url: `${API_URL}/genInfo` });
-
-    const [items, setItems] =React.useState(null);
-    const [customers, setCustomer] =React.useState(null);
-
     const [loadingCustomer, errCustomer, thecustomers] = useGet({ url: `${API_URL}/customers` });
-    React.useEffect(()=>{
-        setCustomer(thecustomers)
-    },[thecustomers])
+    React.useEffect(() => {
+        setCustomers(thecustomers)
+    }, [thecustomers])
+    React.useEffect(() => {
+        if (genInfo) {
+            setItems(genInfo.items)
+            setSize(genInfo.sizes)
+        }
+    }, [genInfo])
 
-    if (!user || !authenticated || loading || loadingCustomer) {
-        return <TheState state="loading" title="Checking Auth" />;
-    } else {
+    if (user && authenticated && items && customers && sizes) {
         return (
-            <OfficeLayout 
-            user={user} 
-            genInfo={genInfo} 
-            {...props} 
-            customers={customers}
-             />
+            <OfficeLayout
+                user={user}
+                {...props}
+
+                items={items}
+                setItems={setItems}
+
+                sizes={sizes}
+
+                customers={customers}
+                setCustomers={setCustomers}
+            />
         )
+    } else {
+        return <TheState state="loading" title="Checking Auth" />;
     }
 }

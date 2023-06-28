@@ -5,7 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Alert, Autocomplete, Box, Slider, TextField } from '@mui/material';
+import { Alert, Autocomplete, Box, FormControl, InputLabel, MenuItem, Select, Slider, TextField } from '@mui/material';
 import axios from 'axios';
 import { API_URL } from '../../../utils/constants';
 import { getTokenFromLocalStorage } from '../../../auth/auth'
@@ -30,7 +30,7 @@ export function AddForm(props) {
             data: val,
             // validateStatus: false //to get error status
         };
-        console.log(val)
+        // console.log(val)
 
         props.setAlert(false)
         var required = [];
@@ -72,8 +72,8 @@ export function AddForm(props) {
     React.useEffect(() => {
         setOpen(props.open)
     }, [props.open]);
-    console.log(props)
-    
+    // console.log(props)
+
     return (
         <div>
             <Dialog
@@ -83,7 +83,7 @@ export function AddForm(props) {
                 aria-labelledby="scroll-dialog-title"
                 aria-describedby="scroll-dialog-description"
             >
-                <DialogTitle id="scroll-dialog-title">New {props.label}</DialogTitle>
+                <DialogTitle id="scroll-dialog-title">{props.label} သစ်</DialogTitle>
                 <DialogContent >
 
                     <DialogContentText
@@ -97,28 +97,35 @@ export function AddForm(props) {
                                 if (p.form !== false) {
                                     switch (p.field) {
                                         case 'items_id':
-                                            return <Autocomplete
-                                                options={props.genInfo.items.map((c) => ({ id: c.id, label: c.name }))}
-                                                onChange={(e, c) => { c && setVal({ ...val, [p.field]: c.id }); }}
-                                                renderInput={(params) => {
-                                                    return < TextField
-                                                        variant='standard' {...params} label={[p.headerName]}
-                                                    />
-                                                }
-                                                }
-                                            />
+                                            return <FormControl variant="standard" fullWidth>
+                                                <InputLabel >{p.headerName}</InputLabel>
+                                                <Select
+                                                    onChange={(e) => { setVal({ ...val, [p.field]: e.target.value }); }}>
+                                                    {
+                                                        props.items.map((it, i) => {
+                                                            return <MenuItem value={it.id} key={i}>
+                                                                <span style={{ backgroundColor: it.color, height: '1rem', width: '1rem' }}>
+                                                                </span>&nbsp;{it.name}
+                                                            </MenuItem>
+                                                        })
+                                                    }
+                                                </Select>
+                                            </FormControl>
                                             break;
                                         case 'sizes_id':
-                                            return <Autocomplete
-                                                options={props.genInfo.sizes.map((c) => ({ id: c.id, label: `${c.size} ${c.unit}` }))}
-                                                onChange={(e, c) => { c && setVal({ ...val, [p.field]: c.id }); }}
-                                                renderInput={(params) => {
-                                                    return < TextField
-                                                        variant='standard' {...params} label={[p.headerName]}
-                                                    />
-                                                }
-                                                }
-                                            />
+                                            return <FormControl variant="standard" fullWidth>
+                                                <InputLabel >{p.headerName}</InputLabel>
+                                                <Select
+                                                    onChange={(e) => { setVal({ ...val, [p.field]: e.target.value }); }}>
+                                                    {
+                                                        props.sizes.map((it, i) => {
+                                                            return <MenuItem value={it.id} key={i}>
+                                                                {it.size} {it.unit}
+                                                            </MenuItem>
+                                                        })
+                                                    }
+                                                </Select>
+                                            </FormControl>
                                             break;
                                         case 'customers_id':
                                             return <Autocomplete

@@ -213,7 +213,7 @@ export function pages(props) {
           sortable: false,
           editable: true,
           renderCell: (params) => {
-            const foundItem = props.genInfo.items.find((item) => item.id === params.row.items_id);
+            const foundItem = props.items.find((item) => item.id === params.row.items_id);
             return <>
               <span style={{ backgroundColor: foundItem ? foundItem.color : null, height: '1rem', width: '1rem' }}>
               </span>&nbsp;{foundItem ? foundItem.name : null}
@@ -231,7 +231,7 @@ export function pages(props) {
                   }
                 )}>
               {
-                props.genInfo.items.map((it, i) => {
+                props.items.map((it, i) => {
                   return <MenuItem value={it.id} key={i}>
                     <span style={{ backgroundColor: it.color, height: '1rem', width: '1rem' }}>
                     </span>&nbsp;{it.name}
@@ -249,7 +249,7 @@ export function pages(props) {
           sortable: false,
           editable: true,
           renderCell: (params) => {
-            const siz = props.genInfo.sizes.find((s) => s.id === params.row.sizes_id);
+            const siz = props.sizes.find((s) => s.id === params.row.sizes_id);
             return `
                       ${siz ? siz.size : ''}
                       ${siz ? siz.unit : ''}
@@ -267,7 +267,7 @@ export function pages(props) {
                   }
                 )}>
               {
-                props.genInfo.sizes.map((s, i) => {
+                props.sizes.map((s, i) => {
                   return <MenuItem value={s.id} key={i}>
                     {s.size} {s.unit}
                   </MenuItem>

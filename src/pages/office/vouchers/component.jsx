@@ -78,11 +78,10 @@ export function VoucherAdd(props) {
                         message: response.data.message,
                         status: 'warning'
                     })
-                    console.log(response.data.message);
+                    // console.log(response.data.message);
                 }
                 props.setModal(false)
             }).catch(function (error) {
-                console.log(error)
                 props.setModal('err')
             });
     }
@@ -187,7 +186,7 @@ export function VoucherAdd(props) {
                                                     });
                                                 }}>
                                                 {
-                                                    props.genInfo.items.map((it, i) => {
+                                                    props.items.map((it, i) => {
                                                         return <MenuItem value={it.id} key={i}>
                                                             <span style={{ backgroundColor: it.color, height: '1rem', width: '1rem' }}>
                                                             </span>&nbsp;{it.name}
@@ -211,7 +210,7 @@ export function VoucherAdd(props) {
                                                     });
                                                 }}>
                                                 {
-                                                    props.genInfo.sizes.map((s, i) => {
+                                                    props.sizes.map((s, i) => {
                                                         return <MenuItem value={s.id} key={i}>
                                                             {s.size} {s.unit}
                                                         </MenuItem>
@@ -321,7 +320,7 @@ export function VoucherDetail(props) {
                         message: response.data.message,
                         status: 'warning'
                     })
-                    console.log(response.data.message);
+                    // console.log(response.data.message);
                 }
                 // props.setModal(false)
             }).catch(function (error) {
@@ -330,7 +329,6 @@ export function VoucherDetail(props) {
             });
     }
     const handleOpen = async () => {
-        console.log(props)
         setOpen(true);
         loadVoucher()
     }
