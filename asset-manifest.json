@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/app.luminrice.com/static/css/main.f593a18a.css",
-    "main.js": "/app.luminrice.com/static/js/main.93594874.js",
+    "main.js": "/app.luminrice.com/static/js/main.f54dcff7.js",
     "static/js/787.7c74a07b.chunk.js": "/app.luminrice.com/static/js/787.7c74a07b.chunk.js",
     "static/media/PYIDAUNGSU-2.5_BOLD.TTF": "/app.luminrice.com/static/media/PYIDAUNGSU-2.5_BOLD.4f541b15514c5e21da2b.TTF",
     "static/media/PYIDAUNGSU-2.5_REGULAR.TTF": "/app.luminrice.com/static/media/PYIDAUNGSU-2.5_REGULAR.2a936b548e5c30cb01ed.TTF",
@@ -9,11 +9,11 @@
     "static/media/logo.svg": "/app.luminrice.com/static/media/logo.103b5fa18196d5665a7e12318285c916.svg",
     "index.html": "/app.luminrice.com/index.html",
     "main.f593a18a.css.map": "/app.luminrice.com/static/css/main.f593a18a.css.map",
-    "main.93594874.js.map": "/app.luminrice.com/static/js/main.93594874.js.map",
+    "main.f54dcff7.js.map": "/app.luminrice.com/static/js/main.f54dcff7.js.map",
     "787.7c74a07b.chunk.js.map": "/app.luminrice.com/static/js/787.7c74a07b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f593a18a.css",
-    "static/js/main.93594874.js"
+    "static/js/main.f54dcff7.js"
   ]
 }
