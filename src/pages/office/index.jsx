@@ -10,38 +10,52 @@ import { useGet } from '../../hooks/get';
 export default function Office(props) {
     const { user, authenticated } = useUser();
 
-    const [items, setItems] = React.useState(null);
-    const [customers, setCustomers] = React.useState(null);
-    const [sizes, setSize] = React.useState(null);
-
-    const [loading, err, genInfo] = useGet({ url: `${API_URL}/genInfo` });
-    const [loadingCustomer, errCustomer, thecustomers] = useGet({ url: `${API_URL}/customers` });
-    React.useEffect(() => {
-        setCustomers(thecustomers)
-    }, [thecustomers])
-    React.useEffect(() => {
-        if (genInfo) {
-            setItems(genInfo.items)
-            setSize(genInfo.sizes)
-        }
-    }, [genInfo])
-
-    if (user && authenticated && items && customers && sizes) {
+    if (user && authenticated) {
         return (
-            <OfficeLayout
-                user={user}
-                {...props}
-
-                items={items}
-                setItems={setItems}
-
-                sizes={sizes}
-
-                customers={customers}
-                setCustomers={setCustomers}
-            />
+            <OfficePage user={user} {...props}/>
         )
     } else {
         return <TheState state="loading" title="Checking Auth" />;
     }
+}
+
+function OfficePage(props) {
+    const [items, setItems] = React.useState([]);
+    const [customers, setCustomers] = React.useState([]);
+    const [sizes, setSize] = React.useState([]);
+
+    const [loading, err, genInfo] = useGet({ url: `${API_URL}/genInfo` });
+    const [loadingCustomer, errCustomer, thecustomers] = useGet({ url: `${API_URL}/customers` });
+    React.useEffect(() => {
+        thecustomers && setCustomers(thecustomers)
+    }, [thecustomers])
+    React.useEffect(() => {
+        if (genInfo) {
+            genInfo.items && setItems(genInfo.items)
+            genInfo.sizes && setSize(genInfo.sizes)
+        }
+    }, [genInfo])
+
+    return (
+        <>
+            {
+                loadingCustomer && loading
+                    ? "loading"
+                    :
+                    <OfficeLayout
+                        user={props.user}
+                        {...props}
+
+                        items={items}
+                        setItems={setItems}
+
+                        sizes={sizes}
+
+                        customers={customers}
+                        setCustomers={setCustomers}
+                    />
+
+            }
+        </>
+    )
 }

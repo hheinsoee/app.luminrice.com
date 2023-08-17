@@ -128,16 +128,21 @@ export function AddForm(props) {
                                             </FormControl>
                                             break;
                                         case 'customers_id':
-                                            return <Autocomplete
-                                                options={props.customers.map((c) => ({ id: c.id, label: `${c.name}` }))}
-                                                onChange={(e, c) => { c && setVal({ ...val, [p.field]: c.id }); }}
-                                                renderInput={(params) => {
-                                                    return < TextField
-                                                        variant='standard' {...params} label={[p.headerName]}
-                                                    />
-                                                }
-                                                }
-                                            />
+                                            return <>{
+                                                props.customers
+                                                    ? <Autocomplete
+                                                        options={props.customers.map((c) => ({ id: c.id, label: `${c.name}` }))}
+                                                        onChange={(e, c) => { c && setVal({ ...val, [p.field]: c.id }); }}
+                                                        renderInput={(params) => {
+                                                            return < TextField
+                                                                variant='standard' {...params} label={[p.headerName]}
+                                                            />
+                                                        }
+                                                        }
+                                                    /> :
+                                                    "no customer"
+                                            }
+                                            </>
                                             break;
                                         default:
                                             return <TextField key={i} fullWidth autoFocus={false}
