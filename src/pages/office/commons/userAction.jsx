@@ -7,7 +7,7 @@ import { getTokenFromLocalStorage } from '../../../auth/auth';
 import { API_URL } from '../../../utils/constants';
 import { remove } from '../../../helpers/function';
 
-function UserAction({ params, editRow, setEditRow, postUrl }) {
+function UserAction({props, params, editRow, setEditRow, postUrl }) {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     // const [, set] = useState(false);
@@ -36,7 +36,11 @@ function UserAction({ params, editRow, setEditRow, postUrl }) {
                 setSuccess(true)
             })
             .catch(function (error) {
-                console.log(error)
+                console.log(error.response.data)
+                props.setAlert({
+                    message: error.response.data,
+                    status: 'warning'
+                })
             })
             .finally(() => {
                 setLoading(false)

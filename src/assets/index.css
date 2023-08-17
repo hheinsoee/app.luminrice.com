@@ -48,6 +48,7 @@
   .print80 * {
     visibility: visible;
     font-size: 9pt;
+    color: #000000;
   }
   .print80 {
     max-width: 80mm;

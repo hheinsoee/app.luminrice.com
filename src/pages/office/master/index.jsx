@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid, GridColDef, GridValueGetterParams, GridCellEditStopParams, MuiEvent, GridCellEditStopReasons, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridToolbar, GridColumnVisibilityModel } from '@mui/x-data-grid';
 import { Button, Typography } from '@mui/material';
 import { AddForm } from './component';
 import UserAction from '../commons/userAction';
@@ -16,7 +16,7 @@ export default function MasterTable(props) {
   const [open, setOpen] = React.useState(false);
   const [rows, setRows] = React.useState([]);
   const [freshData, setFreshData] = React.useState(null);
-  const [colsSetting, setColsSetting] = React.useState([])
+  const [columnVisible, setColumnVisible] = React.useState({});
 
   const [editRow, setEditRow] = React.useState([]);
   const [loading, err, data] = useGet({ url: `${props.getApi}` });
@@ -43,12 +43,13 @@ export default function MasterTable(props) {
           type: 'save',
           width: 70,
           sortable: false,
-          renderCell: params => <UserAction {...{ params, editRow, setEditRow, postUrl: props.postApi }} />
+          renderCell: params => <UserAction  {...{props, params, editRow, setEditRow, postUrl: props.postApi }} />
         })
       }
-      props.theParams.map((p) => {
+      // rows[0] ကို loop ပြီး  = rows[0].[key] == theParams.field မှာ ပါမပါစစ် ပြီး မပါကေ Default
 
-        x[p.name] = p.table; //col setting hide or sho
+      props.theParams.map((p) => {
+        if (p.hide) { x[p.field] = !p.hide }; //col setting hide or sho
         if (p.field == 'sizes_cols_of_items') { //loop and push
           props.sizes.map((s) => {
             return cols.push({
@@ -76,13 +77,25 @@ export default function MasterTable(props) {
             })
           })
         } else {
-          return cols.push(p);
+          cols.push(p)
         }
       })
-      setColsSetting(x)
-      return [
-        ...cols,
-      ]
+      if (rows.length > 0) {
+        Object.keys(rows[0]).map((k) => {
+          var setting = props.theParams.find(x => x.field === k);
+          if (!setting) {
+            cols.push({
+              field: k,
+              headerName: k,
+              width: 150,
+              editable: false
+            })
+            x[k] = false;
+          }
+        })
+      }
+      setColumnVisible(x)
+      return cols;
     },
     [editRow, rows, props]
   );
@@ -109,8 +122,9 @@ export default function MasterTable(props) {
       if (props.to == '/customers') {//if customer
         props.setCustomers(UpdatedRows)
       }
-      if (props.to == '/items') {//if customer
+      if (props.to == '/items') {
         props.setItems(UpdatedRows)
+        console.log('items updated')
       }
       setFreshData(null);
     }
@@ -126,20 +140,18 @@ export default function MasterTable(props) {
         </React.Fragment>
         : <AddForm open={open} setOpen={setOpen} {...props} setFreshData={setFreshData} />
       }
-
       <Button onClick={handleClickOpen}>{props.label} သစ်</Button>
       {
-        !loading && rows && 
+        !loading && rows && columns &&
         <DataGrid
           sx={{ borderRadius: 0 }}
           rows={rows}
           columns={columns}
           onCellEditStop={params => setEditRow([...editRow, params.id])}
           rowSelection={false}
-          initialState={{
-            columns: {
-              columnVisibilityModel: colsSetting,
-            },
+          columnVisibilityModel={columnVisible}
+          onColumnVisibilityModelChange={(params, event, details) => {
+            setColumnVisible(params)
           }}
           slots={{
             toolbar: GridToolbar,
