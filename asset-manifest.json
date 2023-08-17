@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/react-gh-pages/static/css/main.e0d61dab.css",
-    "main.js": "/react-gh-pages/static/js/main.be982c1a.js",
-    "static/js/787.7c74a07b.chunk.js": "/react-gh-pages/static/js/787.7c74a07b.chunk.js",
-    "static/media/PYIDAUNGSU-2.5_BOLD.TTF": "/react-gh-pages/static/media/PYIDAUNGSU-2.5_BOLD.4f541b15514c5e21da2b.TTF",
-    "static/media/PYIDAUNGSU-2.5_REGULAR.TTF": "/react-gh-pages/static/media/PYIDAUNGSU-2.5_REGULAR.2a936b548e5c30cb01ed.TTF",
-    "service-worker.js": "/react-gh-pages/service-worker.js",
-    "static/media/logo.svg": "/react-gh-pages/static/media/logo.103b5fa18196d5665a7e12318285c916.svg",
-    "index.html": "/react-gh-pages/index.html",
-    "main.e0d61dab.css.map": "/react-gh-pages/static/css/main.e0d61dab.css.map",
-    "main.be982c1a.js.map": "/react-gh-pages/static/js/main.be982c1a.js.map",
-    "787.7c74a07b.chunk.js.map": "/react-gh-pages/static/js/787.7c74a07b.chunk.js.map"
+    "main.css": "/app.luminrice.com/static/css/main.f593a18a.css",
+    "main.js": "/app.luminrice.com/static/js/main.3a9e13a8.js",
+    "static/js/787.7c74a07b.chunk.js": "/app.luminrice.com/static/js/787.7c74a07b.chunk.js",
+    "static/media/PYIDAUNGSU-2.5_BOLD.TTF": "/app.luminrice.com/static/media/PYIDAUNGSU-2.5_BOLD.4f541b15514c5e21da2b.TTF",
+    "static/media/PYIDAUNGSU-2.5_REGULAR.TTF": "/app.luminrice.com/static/media/PYIDAUNGSU-2.5_REGULAR.2a936b548e5c30cb01ed.TTF",
+    "service-worker.js": "/app.luminrice.com/service-worker.js",
+    "static/media/logo.svg": "/app.luminrice.com/static/media/logo.103b5fa18196d5665a7e12318285c916.svg",
+    "index.html": "/app.luminrice.com/index.html",
+    "main.f593a18a.css.map": "/app.luminrice.com/static/css/main.f593a18a.css.map",
+    "main.3a9e13a8.js.map": "/app.luminrice.com/static/js/main.3a9e13a8.js.map",
+    "787.7c74a07b.chunk.js.map": "/app.luminrice.com/static/js/787.7c74a07b.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.e0d61dab.css",
-    "static/js/main.be982c1a.js"
+    "static/css/main.f593a18a.css",
+    "static/js/main.3a9e13a8.js"
   ]
 }
